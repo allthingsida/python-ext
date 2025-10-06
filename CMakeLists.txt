@@ -1,18 +1,13 @@
-cmake_minimum_required(VERSION 3.12 FATAL_ERROR)
-
+cmake_minimum_required(VERSION 3.27)
 project(python_ext)
 
 # Specify the C++ standard
 set(CMAKE_CXX_STANDARD 17)
 set(CMAKE_CXX_STANDARD_REQUIRED True)
 
-if(MSVC)
-    # Disable optimization for MSVC
-    set(CMAKE_CXX_FLAGS_RELWITHDEBINFO "/Od /Zi /DNDEBUG")
-else()
-    # Disable optimization for GCC and LLVM/Clang
-    set(CMAKE_CXX_FLAGS_RELWITHDEBINFO "-O0 -g -DNDEBUG")
-endif()
+# Include IDA SDK bootstrap
+include($ENV{IDASDK}/ida-cmake/bootstrap.cmake)
+find_package(idasdk REQUIRED)
 
 # Find the Python interpreter and development components
 find_package(Python COMPONENTS Interpreter Development REQUIRED) #find_package(Python 3.11 COMPONENTS ...)
@@ -22,22 +17,28 @@ if(NOT Python_LIBRARIES)
     message(FATAL_ERROR "Python libraries not found.")
 endif()
 
-# On Windows, always link against python3.lib
+# On Windows, link against python3.lib
 # (count on IDAPython/idapyswitch to pick the right Python version)
-include($ENV{IDASDK}/ida-cmake/common.cmake)
-
-if (__NT__)
+if (WIN32)
     # Link to Python.lib (it will forward to the proper Python3x.lib/.dll)
     string(REGEX REPLACE "python3([0-9]+)\\.lib" "python3.lib" PYTHON_LIB_DIR "${Python_LIBRARIES}")
+else()
+    set(PYTHON_LIB_DIR "${Python_LIBRARIES}")
 endif()
 
-include_directories(${Python_INCLUDE_DIRS})
-
-# Refer to pybind11
+# Add pybind11 subdirectory
 add_subdirectory(3rd_party/pybind11 ${CMAKE_CURRENT_BINARY_DIR}/pybind11_build)
 
-set(PLUGIN_NAME           python_ext)
-set(PLUGIN_SOURCES        plugin.cpp extension.cpp extension.h idasdk.h)
-set(PLUGIN_LINK_LIBRARIES pybind11::embed ${PYTHON_LIB_DIR})
-
-generate()
+# Add plugin using ida-cmake convenience function
+ida_add_plugin(python_ext
+    SOURCES
+        plugin.cpp
+        extension.cpp
+        extension.h
+        idasdk.h
+    LIBRARIES
+        pybind11::embed
+        ${PYTHON_LIB_DIR}
+    INCLUDES
+        ${Python_INCLUDE_DIRS}
+)
