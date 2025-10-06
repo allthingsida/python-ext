@@ -26,8 +26,8 @@ else()
     set(PYTHON_LIB_DIR "${Python_LIBRARIES}")
 endif()
 
-# Add pybind11 subdirectory
-add_subdirectory(3rd_party/pybind11 ${CMAKE_CURRENT_BINARY_DIR}/pybind11_build)
+# Find pybind11 via vcpkg
+find_package(pybind11 CONFIG REQUIRED)
 
 # Add plugin using ida-cmake convenience function
 ida_add_plugin(python_ext
