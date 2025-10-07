@@ -41,4 +41,6 @@ ida_add_plugin(python_ext
         ${PYTHON_LIB_DIR}
     INCLUDES
         ${Python_INCLUDE_DIRS}
+    DEBUG_WORKING_DIR
+        ${CMAKE_CURRENT_SOURCE_DIR}
 )

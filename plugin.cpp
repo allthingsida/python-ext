@@ -4,6 +4,12 @@
 #include "idasdk.h"
 #include "extension.h"
 
+#ifdef _WIN32
+    #include <windows.h>
+#else
+    #include <dlfcn.h>
+#endif
+
 class python_ext_plg_t : public plugmod_t, public event_listener_t
 {
 public:
@@ -16,12 +22,13 @@ public:
     {
         if (code == ui_initing_database)
         {
-#ifdef __NT__
             // To prevent IDA from unloading this plugin and invalidating our Python references, we must keep ourselves in memory.
-            LoadLibraryA("python_ext" PLG_SUFFIX);
+#ifdef _WIN32
+            LoadLibraryA("python_ext.dll");
+#elif defined(__APPLE__)
+            dlopen("python_ext.dylib", RTLD_NOLOAD | RTLD_LAZY);
 #else
-            // TODO: get the full path of the plugin, then test...
-            dlopen("python_ext" PLG_SUFFIX, RTLD_NOLOAD | RTLD_LAZY);
+            dlopen("python_ext.so", RTLD_NOLOAD | RTLD_LAZY);
 #endif
             register_extensions();
             // We don't need to be notified no longer

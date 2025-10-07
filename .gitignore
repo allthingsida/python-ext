@@ -2,3 +2,6 @@ __pycache__/
 .vs/
 build*/
 vcpkg_installed/
+.claude/settings.local.json
+.vscode/launch.json
+.vscode/tasks.json

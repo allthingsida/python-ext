@@ -27,13 +27,6 @@
     #warning "This plugin is only tested on Windows."
 #endif
 
-// Plugin suffix
-#ifdef __EA64__
-#  define PLG_SUFFIX "64"
-#else
-#  define PLG_SUFFIX ""
-#endif
-
 // Extensions namespace
 #define PY_EXT_NAME "ext"
 
