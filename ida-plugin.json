@@ -1,0 +1,28 @@
+{
+  "IDAMetadataDescriptorVersion": 1,
+  "plugin": {
+    "name": "Python Extension Example",
+    "version": "1.0.0",
+    "entryPoint": "python_ext",
+    "description": "Example plugin demonstrating how to extend Python/IDAPython from a C++ plugin using pybind11.",
+    "urls": {
+      "repository": "https://github.com/allthingsida/python-ext"
+    },
+    "authors": [
+      {
+        "name": "Elias Bachaalany",
+        "email": "elias.bachaalany@gmail.com"
+      }
+    ],
+    "categories": [
+      "api-scripting-and-automation"
+    ],
+    "idaVersions": ">=9.0",
+    "platforms": [
+      "windows-x86_64",
+      "linux-x86_64",
+      "macos-aarch64"
+    ],
+    "license": "MIT"
+  }
+}

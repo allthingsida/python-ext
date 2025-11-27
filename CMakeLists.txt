@@ -36,6 +36,8 @@ ida_add_plugin(python_ext
         extension.cpp
         extension.h
         idasdk.h
+    METADATA_JSON
+        ida-plugin.json
     LIBRARIES
         pybind11::embed
         ${PYTHON_LIB_DIR}
